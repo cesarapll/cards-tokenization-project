@@ -5,7 +5,7 @@ Prueba técnica CSTI - Culqi
 ## Configuración inicial
 
 - Debe tener configurada la base de datos Redis en su sistema (si es Windows, utilizar WSL)
-- Cree el archivo `.env` utilizando como base el `.env_template` y colocar los valores correspondientes
+- Cree el archivo `.env` utilizando como base el `.env_template` y coloque los valores correspondientes
 - Instale las dependencias utilizando el comando `npm install`
 
 ## Compilación y ejecución (local)
