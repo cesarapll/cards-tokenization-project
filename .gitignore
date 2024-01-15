@@ -77,3 +77,6 @@ typings/
 
 dist/
 dump.rdb
+
+.env.*
+package-lock.json

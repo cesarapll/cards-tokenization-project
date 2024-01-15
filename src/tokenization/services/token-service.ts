@@ -5,7 +5,7 @@ import {
 import jwt from "jsonwebtoken";
 import paymentInformationRepository from "../repositories/payment-info-repository";
 import {
-    UnauthorizedError,
+    ForbiddenError,
 } from "../../handlers/error-handler";
 import paymentInfoValidator from "../validators/payment-info-validator";
 
@@ -45,9 +45,9 @@ const tokenService: TokenService = {
         jwt.verify(token, process.env.JWT_SECRET_KEY!, (err, decodedPayload) => {
             if (err) {
                 if (err.name === "TokenExpiredError") {
-                    throw new UnauthorizedError("El token de la tarjeta ha expirado");
+                    throw new ForbiddenError("El token de la tarjeta ha expirado");
                 } else {
-                    throw new UnauthorizedError("El token ingresado no es válido");
+                    throw new ForbiddenError("El token ingresado no es válido");
                 }
             }
         });

@@ -5,10 +5,10 @@ export class BadRequestError extends Error {
     }
 }
 
-export class UnauthorizedError extends Error {
+export class ForbiddenError extends Error {
     constructor(message: string) {
         super(message);
-        this.name = "UnauthorizedError";
+        this.name = "ForbiddenError";
     }
 }
 
@@ -40,9 +40,9 @@ export class ErrorHandler {
                 message: error.message,
             };
         }
-        if (error instanceof UnauthorizedError) {
+        if (error instanceof ForbiddenError) {
             return {
-                statusCode: 401,
+                statusCode: 403,
                 message: error.message,
             };
         }

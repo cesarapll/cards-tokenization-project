@@ -1,9 +1,8 @@
 import { Request, Response, NextFunction } from "express";
-import { BadRequestError, UnauthorizedError } from "../../handlers/error-handler";
-import tokenService from '../services/token-service';
+import { BadRequestError } from "../../handlers/error-handler";
 import paymentInformationService from "../services/payment-information-service";
- 
-interface PaymentInformationController{
+
+interface PaymentInformationController {
     getCardByToken: (req: Request, res: Response, next: NextFunction) => void;
 }
 

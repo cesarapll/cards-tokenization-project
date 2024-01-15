@@ -20,9 +20,9 @@ app.use(authorizationMiddleware);
 app.use(router);
 app.use(errorMiddleware);
 (async () => {
-  await redisClient.connect();
+    await redisClient.connect();
 })();
 
 app.listen(port, () => {
-  console.log(`Server running in port ${process.env.PORT || 3000}`);
+    console.log(`Server running in port ${process.env.PORT || 3000}`);
 });
