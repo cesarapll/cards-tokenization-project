@@ -1,19 +1,53 @@
-import { PaymentInformation, PaymentInformationWithToken } from "../interfaces/payment-information";
-import jwt from 'jsonwebtoken'
-import { setPaymentInformationWithExpiration } from '../repositories/token-repository';
+import {
+    PaymentInformation,
+    PaymentInformationWithToken,
+} from "../interfaces/payment-information";
+import jwt from "jsonwebtoken";
+import paymentInformationRepository from "../repositories/payment-info-repository";
+import { CreditCard } from "../interfaces/credit-card";
+import { InternalServerError, NotFoundError, UnauthorizedError } from "../../handlers/error-handler";
 
-export const signIn = async (paymentInfo: PaymentInformation): Promise<string> => {
-    const { email, ...creditCard } = paymentInfo
-    const token = jwt.sign(creditCard, 'secret-key', { expiresIn: '60' })
-    const paymentInfoWithToken: PaymentInformationWithToken = { ...paymentInfo, token }
-    console.log(paymentInfoWithToken)
-    await setPaymentInformationWithExpiration(`${token}`, paymentInfoWithToken);
+const TOKEN_EXPIRATION = 60;
 
-    return token;
+interface TokenService {
+    signIn: (paymentInfo: PaymentInformation, tokenExpiration?: number) => Promise<string>;
+    verify: (token: string) => boolean;
+    getCardByToken: (token: string) => Promise<CreditCard>
 }
 
-export const verify = (token: string) => {
-    const creditCard = jwt.verify(token, 'secret-key');
-    return creditCard
+const tokenService: TokenService = {
+    signIn: async (
+        paymentInfo: PaymentInformation,
+        tokenExpiration: number = TOKEN_EXPIRATION
+    ): Promise<string> => {
+        const token = jwt.sign(paymentInfo, process.env.JWT_SECRET_KEY!, {
+            expiresIn: tokenExpiration,
+        });
+        const paymentInfoWithToken: PaymentInformationWithToken = {
+            ...paymentInfo,
+            token,
+        };
+        await paymentInformationRepository.setPaymentInformationWithExpiration(`${token}`, paymentInfoWithToken);
+        return token;
+    },
+    verify: (token: string): boolean => {
+
+        jwt.verify(token, process.env.JWT_SECRET_KEY!, (err, decodedPayload) => {
+            if (err) {
+                if (err.name === 'TokenExpiredError') {
+                    throw new UnauthorizedError("El token ha expirado")
+                } else {
+                    throw new UnauthorizedError("El token no es válido")
+                }
+            }
+        })
+        return true;
+    },
+    getCardByToken: async (token: string): Promise<CreditCard> => {
+        const paymentInfoWithToken = await paymentInformationRepository.getPaymentInformation(token);
+        if (!paymentInfoWithToken) throw new NotFoundError("No se ha encontrado la tarjeta porque el token ha expirado");
+        return paymentInfoWithToken.creditCard;
+    }
 }
 
+export default tokenService;

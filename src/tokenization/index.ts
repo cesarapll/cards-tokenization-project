@@ -1,9 +1,9 @@
 import express from 'express'
-import { createToken, verifyToken } from './controllers/token-controller';
+import tokenController from './controllers/token-controller';
 
 const router = express.Router();
 
-router.post("/", createToken)
-router.get("/", verifyToken)
+router.post("/", tokenController.createToken)
+router.get("/card", tokenController.getCardByToken)
 
 export default router;
