@@ -6,7 +6,7 @@ Prueba técnica CSTI - Culqi
 
 - Debe tener configurada la base de datos Redis en su sistema
 - Cree el archivo `.env` utilizando como base el `.env_template` y colocar los valores correspondientes
-- Instalar las dependencias: `npm install`
+- Instale las dependencias utilizando el comando `npm install`
 
 ## Compilación y ejecución (local)
 
