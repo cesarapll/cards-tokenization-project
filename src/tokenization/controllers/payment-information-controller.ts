@@ -15,8 +15,6 @@ const paymentInformationController: PaymentInformationController = {
             if (Array.isArray(token)) {
                 throw new BadRequestError("Solo debe ingresar un token")
             }
-
-            tokenService.verify(token);
             const { card_number, expiration_month, expiration_year } =
                 await paymentInformationService.getCardByToken(token);
             res.json({

@@ -7,9 +7,10 @@ const paymentInfoValidator = Yup.object().shape({
         .test({
             name: "isValidLength",
             message: "El número de tarjeta debe tener entre 13 y 16 dígitos",
-            test: (value) =>
-                value !== undefined &&
-                (value.toString().length === 13 || value.toString().length === 16),
+            test: (value) => {
+                return value !== undefined &&
+                    (value.toString().length >= 13 && value.toString().length <= 16)
+            }
         })
         .test({
             name: "isValidWithLuhn",
@@ -30,7 +31,7 @@ const paymentInfoValidator = Yup.object().shape({
     expiration_year: Yup.string().length(4).required("El año de expiración es requerido")
         .test({
             name: 'isAValidYearNumber',
-            message: 'El año no es un número válido',
+            message: 'El año de expiración debe ser igual o mayor al año actual y menor o igual al año actual más 5 años',
             test: (value) => {
                 const numericYear = Number(value)
                 if (isNaN(numericYear)) return false;
@@ -42,7 +43,7 @@ const paymentInfoValidator = Yup.object().shape({
     expiration_month: Yup.string().min(1).max(2).required("El mes de expiración es requerido")
         .test({
             name: 'isAValidMonthNumber',
-            message: 'El mes no es un número válido',
+            message: 'El mes de expiración debe ser un número entre 1 y 12',
             test: (value) => {
                 const numericMonth = Number(value)
                 if (isNaN(numericMonth)) return false;

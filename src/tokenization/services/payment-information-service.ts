@@ -1,6 +1,7 @@
 import { CreditCardResponse } from "../interfaces/credit-card-response";
 import paymentInformationRepository from '../repositories/payment-info-repository'
 import { NotFoundError } from '../../handlers/error-handler'
+import tokenService from "./token-service";
 
 interface PaymentInformationService {
     getCardByToken: (token: string) => Promise<CreditCardResponse>;
@@ -8,6 +9,7 @@ interface PaymentInformationService {
 
 const paymentInformationService: PaymentInformationService = {
     getCardByToken: async (token: string): Promise<CreditCardResponse> => {
+        tokenService.verify(token);
         const paymentInfoWithToken =
             await paymentInformationRepository.getPaymentInformation(token);
         if (!paymentInfoWithToken)
