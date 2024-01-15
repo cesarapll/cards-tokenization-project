@@ -1,9 +1,9 @@
 import * as Yup from "yup";
 import luhn from "fast-luhn";
 
-export const tokenRequestSchema = Yup.object().shape({
+const paymentInfoValidator = Yup.object().shape({
     card_number: Yup.number()
-        .required()
+        .required("El número de tarjeta es requerido")
         .test({
             name: "isValidLength",
             message: "El número de tarjeta debe tener entre 13 y 16 dígitos",
@@ -19,7 +19,7 @@ export const tokenRequestSchema = Yup.object().shape({
             },
         }),
     cvv: Yup.number()
-        .required()
+        .required("El código CVV es requerido")
         .test({
             name: "isValidLength",
             message: "El CVV debe tener 3 o 4 dígitos",
@@ -27,7 +27,7 @@ export const tokenRequestSchema = Yup.object().shape({
                 value !== undefined &&
                 (value.toString().length === 3 || value.toString().length === 4),
         }),
-    expiration_year: Yup.string().length(4).required()
+    expiration_year: Yup.string().length(4).required("El año de expiración es requerido")
         .test({
             name: 'isAValidYearNumber',
             message: 'El año no es un número válido',
@@ -39,7 +39,7 @@ export const tokenRequestSchema = Yup.object().shape({
             }
         }),
 
-    expiration_month: Yup.string().min(1).max(2).required()
+    expiration_month: Yup.string().min(1).max(2).required("El mes de expiración es requerido")
         .test({
             name: 'isAValidMonthNumber',
             message: 'El mes no es un número válido',
@@ -50,7 +50,7 @@ export const tokenRequestSchema = Yup.object().shape({
             }
         }),
     email: Yup.string()
-        .required()
+        .required("El email es requerido")
         .email()
         .min(5)
         .max(100)
@@ -65,3 +65,5 @@ export const tokenRequestSchema = Yup.object().shape({
             },
         }),
 });
+
+export default paymentInfoValidator;

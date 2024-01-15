@@ -1,8 +1,9 @@
-import { CreditCard } from './credit-card'
-
 export interface PaymentInformation {
+    card_number: number;
+    cvv: number;
+    expiration_year: string;
+    expiration_month: string;
     email: string;
-    creditCard: CreditCard;
 }
 
 

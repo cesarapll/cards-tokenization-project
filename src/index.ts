@@ -1,7 +1,7 @@
 import express from 'express'
 import cors from 'cors';
 import { authorizationMiddleware } from './middlewares/authorization';
-import tokenRouter from './tokenization'
+import tokenizationRouter from './tokenization'
 import redisClient from './database/redis-client'
 import { errorMiddleware } from './middlewares/error'
 import { config } from 'dotenv';
@@ -16,7 +16,7 @@ app.use(express.json());
 config({ path: __dirname + '/.env' })
 
 
-router.use('/tokens', tokenRouter)
+router.use('/', tokenizationRouter)
 app.use(authorizationMiddleware)
 app.use(router)
 app.use(errorMiddleware)
